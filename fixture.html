@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIFA World Cup 2026 – Fikstür</title>
+  <meta name="description" content="FIFA Dünya Kupası 2026 maç fikstürü – takım adları ve başlangıç saatleri. TheSportsDB ile canlı veri." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep:   #04080f;
+      --bg-card:   #0d1321;
+      --bg-glass:  rgba(255,255,255,0.04);
+      --border:    rgba(255,255,255,0.07);
+      --gold:      #f5c942;
+      --gold-dim:  #c8983a;
+      --green:     #00e87a;
+      --red:       #ff4d6d;
+      --text-1:    #f0f4ff;
+      --text-2:    #8b95aa;
+      --accent:    #3b82f6;
+      --radius:    14px;
+      --shadow:    0 8px 40px rgba(0,0,0,0.55);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-1);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND GRID & GLOW ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 45% at 50% -10%, rgba(245,201,66,.18) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(59,130,246,.12) 0%, transparent 60%),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,.022) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,.022) 40px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #app { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 18px 80px; }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      padding: 56px 0 40px;
+    }
+    .trophy-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #ffe26a, var(--gold-dim));
+      box-shadow: 0 0 40px rgba(245,201,66,.5), 0 0 80px rgba(245,201,66,.2);
+      font-size: 36px;
+      margin-bottom: 20px;
+      animation: pulse-gold 3s ease-in-out infinite;
+    }
+    @keyframes pulse-gold {
+      0%,100% { box-shadow: 0 0 40px rgba(245,201,66,.5), 0 0 80px rgba(245,201,66,.2); }
+      50%      { box-shadow: 0 0 60px rgba(245,201,66,.75), 0 0 120px rgba(245,201,66,.35); }
+    }
+    header h1 {
+      font-size: clamp(2rem,5vw,3.2rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, var(--gold) 30%, #fff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+    header p.sub {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: var(--text-2);
+      font-weight: 400;
+      letter-spacing: .3px;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+    .filter-bar input[type="text"] {
+      flex: 1 1 220px;
+      max-width: 320px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 12px 20px;
+      color: var(--text-1);
+      font-family: inherit;
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .25s, box-shadow .25s;
+    }
+    .filter-bar input[type="text"]::placeholder { color: var(--text-2); }
+    .filter-bar input[type="text"]:focus {
+      border-color: var(--gold-dim);
+      box-shadow: 0 0 0 3px rgba(245,201,66,.15);
+    }
+    .filter-btn {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 12px 22px;
+      color: var(--text-2);
+      font-family: inherit;
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+    .filter-btn.active { background: var(--gold); border-color: var(--gold); color: #000; font-weight: 700; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .stat-chip {
+      background: var(--bg-glass);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 8px 20px;
+      font-size: .85rem;
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stat-chip strong { color: var(--text-1); font-weight: 700; font-size: 1rem; }
+
+    /* ── DATE GROUP ── */
+    .date-group { margin-bottom: 28px; }
+    .date-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .date-pill {
+      background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+      color: #000;
+      font-weight: 700;
+      font-size: .78rem;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 40px;
+    }
+    .date-line { flex: 1; height: 1px; background: var(--border); }
+    .date-count { font-size: .82rem; color: var(--text-2); }
+
+    /* ── MATCH CARD ── */
+    .match-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      transition: transform .18s, box-shadow .18s, border-color .18s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .match-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(245,201,66,.03), transparent 60%);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .match-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow), 0 0 0 1px rgba(245,201,66,.18);
+      border-color: rgba(245,201,66,.22);
+    }
+    .match-card:hover::before { opacity: 1; }
+
+    /* live pulse */
+    .match-card.live { border-color: rgba(0,232,122,.35); }
+    .match-card.live::after {
+      content: 'CANLI';
+      position: absolute;
+      top: 10px; right: 12px;
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      color: var(--green);
+      animation: blink 1.2s step-start infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* finished */
+    .match-card.finished { border-color: rgba(255,255,255,.04); }
+    .match-card.finished .team-name { color: var(--text-2); }
+
+    .team {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .team.home { align-items: flex-end; text-align: right; }
+    .team.away { align-items: flex-start; text-align: left; }
+
+    .team-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .team.home .team-badge-row { flex-direction: row-reverse; }
+
+    .team-badge {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: rgba(255,255,255,.06);
+      padding: 3px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .team-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-1);
+      line-height: 1.2;
+    }
+
+    /* center info */
+    .match-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      min-width: 100px;
+    }
+    .score-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+    .score-box .dash { color: var(--text-2); font-weight: 300; font-size: 1.3rem; }
+    .score-box .score-num { min-width: 22px; text-align: center; }
+
+    .time-tag {
+      font-size: .78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 40px;
+      letter-spacing: .5px;
+    }
+    .time-tag.upcoming {
+      background: rgba(59,130,246,.15);
+      color: var(--accent);
+      border: 1px solid rgba(59,130,246,.25);
+    }
+    .time-tag.live-tag {
+      background: rgba(0,232,122,.12);
+      color: var(--green);
+      border: 1px solid rgba(0,232,122,.25);
+    }
+    .time-tag.done {
+      background: rgba(255,255,255,.04);
+      color: var(--text-2);
+      border: 1px solid var(--border);
+    }
+
+    .venue-tag {
+      font-size: .72rem;
+      color: var(--text-2);
+      max-width: 140px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── ROUND LABEL ── */
+    .round-label {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    /* ── LOADER ── */
+    #loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding: 80px 0;
+    }
+    .spinner {
+      width: 52px; height: 52px;
+      border: 3px solid rgba(255,255,255,.08);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loader p { color: var(--text-2); font-size: .95rem; }
+
+    /* ── ERROR ── */
+    #error-box {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--red);
+    }
+    #error-box .icon { font-size: 3rem; margin-bottom: 12px; }
+    #error-box p { color: var(--text-2); margin-top: 8px; font-size: .9rem; }
+    #error-box button {
+      margin-top: 20px;
+      background: var(--gold);
+      color: #000;
+      border: none;
+      border-radius: 40px;
+      padding: 11px 28px;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ── EMPTY ── */
+    #empty-box {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    #empty-box .icon { font-size: 3rem; margin-bottom: 12px; }
+    #empty-box p { color: var(--text-2); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 40px 0 20px;
+      color: var(--text-2);
+      font-size: .8rem;
+    }
+    footer a { color: var(--gold-dim); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 540px) {
+      .team-name { font-size: .85rem; }
+      .match-card { padding: 14px 14px; gap: 8px; }
+      .match-center { min-width: 80px; }
+      .score-box { font-size: 1.3rem; }
+      .team-badge { width: 28px; height: 28px; }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="trophy-wrap">🏆</div>
+    <h1>FIFA World Cup 2026</h1>
+    <p class="sub">Kanada · ABD · Meksika &nbsp;|&nbsp; Tüm Maç Fikstürü</p>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-bar" id="stats-bar" style="display:none">
+    <div class="stat-chip">Toplam Maç <strong id="stat-total">–</strong></div>
+    <div class="stat-chip">Tamamlanan <strong id="stat-done">–</strong></div>
+    <div class="stat-chip">Bekleyen <strong id="stat-upcoming">–</strong></div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar" id="filter-bar" style="display:none">
+    <input type="text" id="search-input" placeholder="🔍  Takım ara…" />
+    <button class="filter-btn active" data-filter="all">Tümü</button>
+    <button class="filter-btn" data-filter="upcoming">Bekleyen</button>
+    <button class="filter-btn" data-filter="done">Tamamlanan</button>
+  </div>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="spinner"></div>
+    <p>Fikstür yükleniyor…</p>
+  </div>
+
+  <!-- ERROR -->
+  <div id="error-box">
+    <div class="icon">⚠️</div>
+    <h2>Veri yüklenemedi</h2>
+    <p id="error-msg">Lütfen internet bağlantınızı kontrol edin.</p>
+    <button onclick="loadFixtures()">Tekrar Dene</button>
+  </div>
+
+  <!-- EMPTY -->
+  <div id="empty-box">
+    <div class="icon">🔍</div>
+    <p>Aramanıza uygun maç bulunamadı.</p>
+  </div>
+
+  <!-- FIXTURE LIST -->
+  <main id="fixture-list"></main>
+
+  <footer>
+    Veriler &nbsp;<a href="https://www.thesportsdb.com" target="_blank" rel="noopener">TheSportsDB</a>&nbsp; tarafından sağlanmaktadır.
+    &nbsp;·&nbsp; Saatler lokal saat diliminize göre gösterilmektedir.
+  </footer>
+</div>
+
+<script>
+const API_URL = 'https://www.thesportsdb.com/api/v1/json/3/eventsseason.php?id=4429&s=2026';
+
+const ROUND_LABELS = {
+  '1': 'Grup Aşaması – Tur 1', '2': 'Grup Aşaması – Tur 2', '3': 'Grup Aşaması – Tur 3',
+  '4': 'Son 32', '5': 'Son 16', '6': 'Çeyrek Final', '7': 'Yarı Final',
+  '8': 'Üçüncülük Maçı', '9': 'Final'
+};
+
+let allEvents = [];
+let activeFilter = 'all';
+let searchQuery = '';
+
+function getStatus(evt) {
+  const s = (evt.strStatus || '').toLowerCase();
+  if (s === 'live' || s === '1h' || s === 'ht' || s === '2h') return 'live';
+  if (s === 'ft' || s === 'aet' || s === 'pen' || s === 'finished') return 'done';
+  const ts = new Date(evt.strTimestamp);
+  if (!isNaN(ts) && ts < new Date()) return 'done';
+  return 'upcoming';
+}
+
+function formatLocalTime(ts) {
+  const d = new Date(ts);
+  if (isNaN(d)) return '—';
+  return d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatLocalDate(ts) {
+  const d = new Date(ts);
+  if (isNaN(d)) return ts;
+  return d.toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function dateKey(ts) {
+  const d = new Date(ts);
+  if (isNaN(d)) return ts;
+  return d.toISOString().slice(0, 10);          // YYYY-MM-DD in UTC; keep UTC-consistent
+}
+
+function getRoundLabel(round) {
+  return ROUND_LABELS[String(round)] || `Tur ${round}`;
+}
+
+function buildCard(evt) {
+  const status = getStatus(evt);
+  const localTime = formatLocalTime(evt.strTimestamp);
+
+  const homeScore = evt.intHomeScore != null ? evt.intHomeScore : '–';
+  const awayScore = evt.intAwayScore != null ? evt.intAwayScore : '–';
+  const homeBadge = evt.strHomeTeamBadge || '';
+  const awayBadge = evt.strAwayTeamBadge || '';
+
+  let timeTagClass = 'upcoming';
+  let timeTagText = localTime;
+  if (status === 'live')     { timeTagClass = 'live-tag'; timeTagText = '● CANLI'; }
+  else if (status === 'done'){ timeTagClass = 'done'; }
+
+  const roundLbl = getRoundLabel(evt.intRound);
+
+  return `
+    <div class="match-card ${status}" data-home="${(evt.strHomeTeam||'').toLowerCase()}" data-away="${(evt.strAwayTeam||'').toLowerCase()}">
+      <div class="team home">
+        <div class="team-badge-row">
+          ${homeBadge ? `<img class="team-badge" src="${homeBadge}" alt="${evt.strHomeTeam}" loading="lazy" onerror="this.style.display='none'">` : ''}
+          <span class="team-name">${evt.strHomeTeam || '–'}</span>
+        </div>
+      </div>
+
+      <div class="match-center">
+        <div class="round-label">${roundLbl}</div>
+        <div class="score-box">
+          <span class="score-num">${homeScore}</span>
+          <span class="dash">:</span>
+          <span class="score-num">${awayScore}</span>
+        </div>
+        <span class="time-tag ${timeTagClass}">${timeTagText}</span>
+        ${evt.strVenue ? `<span class="venue-tag" title="${evt.strVenue}">📍 ${evt.strVenue}</span>` : ''}
+      </div>
+
+      <div class="team away">
+        <div class="team-badge-row">
+          <span class="team-name">${evt.strAwayTeam || '–'}</span>
+          ${awayBadge ? `<img class="team-badge" src="${awayBadge}" alt="${evt.strAwayTeam}" loading="lazy" onerror="this.style.display='none'">` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderFixtures() {
+  const list = document.getElementById('fixture-list');
+  const emptyBox = document.getElementById('empty-box');
+
+  const q = searchQuery.toLowerCase().trim();
+
+  const filtered = allEvents.filter(evt => {
+    const status = getStatus(evt);
+    if (activeFilter === 'upcoming' && status !== 'upcoming' && status !== 'live') return false;
+    if (activeFilter === 'done' && status !== 'done') return false;
+    if (q) {
+      const home = (evt.strHomeTeam || '').toLowerCase();
+      const away = (evt.strAwayTeam || '').toLowerCase();
+      if (!home.includes(q) && !away.includes(q)) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    list.innerHTML = '';
+    emptyBox.style.display = 'block';
+    return;
+  }
+  emptyBox.style.display = 'none';
+
+  // Group by local date
+  const groups = {};
+  filtered.forEach(evt => {
+    const key = dateKey(evt.strTimestamp);
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(evt);
+  });
+
+  const sortedKeys = Object.keys(groups).sort();
+  let html = '';
+  sortedKeys.forEach(key => {
+    const evts = groups[key];
+    const dateLabel = formatLocalDate(evts[0].strTimestamp);
+    html += `
+      <div class="date-group">
+        <div class="date-header">
+          <span class="date-pill">${dateLabel}</span>
+          <span class="date-line"></span>
+          <span class="date-count">${evts.length} maç</span>
+        </div>
+        ${evts.map(buildCard).join('')}
+      </div>`;
+  });
+
+  list.innerHTML = html;
+}
+
+function updateStats() {
+  const total = allEvents.length;
+  const done = allEvents.filter(e => getStatus(e) === 'done').length;
+  const upcoming = allEvents.filter(e => getStatus(e) === 'upcoming' || getStatus(e) === 'live').length;
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-upcoming').textContent = upcoming;
+  document.getElementById('stats-bar').style.display = 'flex';
+  document.getElementById('filter-bar').style.display = 'flex';
+}
+
+async function loadFixtures() {
+  const loader = document.getElementById('loader');
+  const errorBox = document.getElementById('error-box');
+  const list = document.getElementById('fixture-list');
+
+  loader.style.display = 'flex';
+  errorBox.style.display = 'none';
+  list.innerHTML = '';
+
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (!data.events || data.events.length === 0) throw new Error('Veri bulunamadı.');
+
+    // Sort by timestamp
+    allEvents = data.events.sort((a, b) => new Date(a.strTimestamp) - new Date(b.strTimestamp));
+
+    updateStats();
+    renderFixtures();
+    loader.style.display = 'none';
+  } catch (err) {
+    loader.style.display = 'none';
+    errorBox.style.display = 'block';
+    document.getElementById('error-msg').textContent = err.message;
+  }
+}
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    renderFixtures();
+  });
+});
+
+// Search
+let searchTimer;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    searchQuery = e.target.value;
+    renderFixtures();
+  }, 200);
+});
+
+// Init
+loadFixtures();
+</script>
+</body>
+</html>

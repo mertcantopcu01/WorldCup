@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FIFA World Cup 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%; height: 100%;
+            background: #04080F;
+            overflow: hidden;
+        }
+        canvas#ComposeTarget {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+    <!-- Local Config -->
+    <script src="config.js"></script>
+    <!-- Firebase SDK Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-messaging-compat.js"></script>
+    <script>
+      // Firebase Başlatma (Bildirimler için gerekli)
+      if (self.firebaseConfig) {
+        firebase.initializeApp(self.firebaseConfig);
+      } else {
+        console.error("Firebase config is missing! Please configure config.js.");
+      }
+    </script>
+</head>
+<body>
+<canvas id="ComposeTarget"></canvas>
+<script src="worldcup.js" defer></script>
+</body>
+</html>
